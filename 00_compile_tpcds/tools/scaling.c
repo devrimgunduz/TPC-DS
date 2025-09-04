@@ -66,8 +66,8 @@ static struct SCALING_T {
 static int arUpdateDates[6];
 static int arInventoryUpdateDates[6];
 
-static int arScaleVolume[9] =
-   {1, 10, 100, 300, 1000, 3000, 10000, 30000, 100000};
+static int arScaleVolume[10] =
+   {1, 10, 100, 300, 1000, 3000, 10000, 30000, 100000, 1000000};
 
 void setUpdateScaling(int table);
 int	row_skip(int tbl, ds_key_t count);
@@ -266,7 +266,7 @@ get_rowcount(int table)
 	if (!bScaleSet)
 	{		
 		nScale = get_int("SCALE");
-		if (nScale > 100000)
+		if (nScale > 1000000)
 			ReportErrorNoLine(QERR_BAD_SCALE, NULL, 1);
 
 		memset(arRowcount, 0, sizeof(long) * MAX_TABLE);
@@ -274,6 +274,9 @@ get_rowcount(int table)
 		{
 			switch(nScale)
 			{
+			case 1000000:
+				arRowcount[nTable].kBaseRowcount = dist_weight(NULL, "rowcounts", nTable + nRowcountOffset + 1, 10);
+				break;
 			case 100000:
 				arRowcount[nTable].kBaseRowcount = dist_weight(NULL, "rowcounts", nTable + nRowcountOffset + 1, 9);
 				break;
